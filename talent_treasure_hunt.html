@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talent Treasure Hunt</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Monaco&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://us.123rf.com/450wm/iosebi/iosebi2210/iosebi221001579/200199721-word-cloud-with-talent-development-concept-create-with-text-only.jpg?ver=6') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .main-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            height: 75%;
+            max-width: 900px;
+            max-height: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .main-card h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-family: 'Monaco', cursive;
+            color: #1b0b54;
+            animation: poppingText 1s ease-out;
+        }
+        @keyframes poppingText {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .start-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+            font-family: 'Pacifico', cursive;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .start-button span {
+            margin-left: 10px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .start-button:hover span {
+            transform: translateX(5px);
+        }
+        .question-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .question {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .options li {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .options li:hover {
+            background-color: #e0e0e0;
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-family: 'Pacifico', cursive;
+            display: none;
+        }
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.5em;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .results {
+            display: none;
+            text-align: center;
+        }
+        .results h1 {
+            font-size: 4em;
+            color: #1b0b54;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .results p {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <h1>WELCOME to TALENT TREASURE HUNT</h1>
+        <button class="start-button">
+            START QUIZ <span>&#9654;</span>
+        </button>
+        <div class="question-container">
+            <div class="timer">10</div>
+            <h2 class="question">Question 1!</h2>
+            <ul class="options">
+                <li data-choice="A">A - Singing</li>
+                <li data-choice="B">B - Drawing</li>
+                <li data-choice="C">C - Dancing</li>
+                <li data-choice="D">D - Writing</li>
+            </ul>
+            <button class="submit-button">Submit</button>
+        </div>
+        <div class="results">
+            <h1>RESULTS!</h1>
+            <p class="result-text">YOUR HIDDEN TALENT IS: <span class="result-talent"></span></p>
+            <p class="result-description"></p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.start-button').addEventListener('click', startQuiz);
+
+        let currentQuestionIndex = 0;
+        let userChoices = [];
+        let timerInterval;
+
+        const questions = [
+            {question: "What is your favorite hobby?", options: ["A - Singing", "B - Drawing", "C - Dancing", "D - Writing"]},
+            {question: "Which activity do you enjoy the most?", options: ["A - Performing", "B - Crafting", "C - Moving", "D - Storytelling"]},
+            {question: "What type of classes do you prefer?", options: ["A - Music", "B - Art", "C - Physical Education", "D - Literature"]},
+            {question: "What do you like to do in your free time?", options: ["A - Listen to music", "B - Sketch", "C - Practice dance moves", "D - Read books"]},
+            {question: "What is your dream job?", options: ["A - Singer", "B - Artist", "C - Dancer", "D - Author"]},
+            {question: "Which type of events do you like attending?", options: ["A - Concerts", "B - Art exhibitions", "C - Dance shows", "D - Book signings"]},
+            {question: "What kind of content do you enjoy on social media?", options: ["A - Music videos", "B - Art tutorials", "C - Dance routines", "D - Creative writing"]},
+            {question: "What kind of gifts do you prefer giving?", options: ["A - CDs or music subscriptions", "B - Art supplies", "C - Dance shoes", "D - Books"]},
+            {question: "What kind of games do you like?", options: ["A - Karaoke", "B - Drawing games", "C - Dance video games", "D - Story-based games"]},
+            {question: "What kind of club would you join?", options: ["A - Music club", "B - Art club", "C - Dance club", "D - Writing club"]}
+        ];
+
+        function startQuiz() {
+            document.querySelector('h1').style.display = 'none';
+            document.querySelector('.start-button').style.display = 'none';
+            document.querySelector('.question-container').style.display = 'flex';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const questionElement = document.querySelector('.question');
+                const optionsElement = document.querySelector('.options');
+                const timerElement = document.querySelector('.timer');
+                const submitButton = document.querySelector('.submit-button');
+
+                const currentQuestion = questions[currentQuestionIndex];
+                questionElement.textContent = currentQuestion.question;
+                optionsElement.innerHTML = '';
+
+                currentQuestion.options.forEach(option => {
+                    const li = document.createElement('li');
+                    li.textContent = option;
+                    li.dataset.choice = option.charAt(0);
+                    li.addEventListener('click', selectOption);
+                    optionsElement.appendChild(li);
+                });
+
+                questionElement.style.animation = 'none';
+                questionElement.offsetHeight; // Trigger reflow
+                questionElement.style.animation = 'poppingText 1s ease-out';
+                
+                timerElement.style.display = 'block';
+                submitButton.style.display = 'block';
+                startTimer();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function startTimer() {
+            let timeLeft = 10;
+            const timerElement = document.querySelector('.timer');
+            timerElement.textContent = timeLeft;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitAnswer();
+                }
+            }, 1000);
+        }
+
+        function selectOption(event) {
+            const selectedOption = event.target;
+            document.querySelectorAll('.options li').forEach(li => {
+                li.style.backgroundColor = '#f0f0f0';
+            });
+            selectedOption.style.backgroundColor = '#c8e6c9';
+            userChoices[currentQuestionIndex] = selectedOption.dataset.choice;
+        }
+
+        function submitAnswer() {
+            clearInterval(timerInterval);
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        document.querySelector('.submit-button').addEventListener('click', submitAnswer);
+
+        function endQuiz() {
+            const resultsElement = document.querySelector('.results');
+            const questionContainer = document.querySelector('.question-container');
+            const resultTalent = calculateResult();
+
+            questionContainer.style.display = 'none';
+            resultsElement.style.display = 'block';
+            document.querySelector('.result-talent').textContent = resultTalent.talent;
+            document.querySelector('.result-description').textContent = resultTalent.description;
+        }
+
+        function calculateResult() {
+            const answersCount = {A: 0, B: 0, C: 0, D: 0};
+            userChoices.forEach(choice => {
+                answersCount[choice]++;
+            });
+
+            const maxChoice = Object.keys(answersCount).reduce((a, b) => answersCount[a] > answersCount[b] ? a : b);
+
+            const results = {
+                A: {talent: 'Singing', description: 'You have a talent for singing and love to perform.'},
+                B: {talent: 'Drawing', description: 'You have a knack for drawing and enjoy creating art.'},
+                C: {talent: 'Dancing', description: 'You have a passion for dancing and love to move.'},
+                D: {talent: 'Writing', description: 'You have a talent for writing and enjoy crafting stories.'}
+            };
+
+            return results[maxChoice];
+        }
+    </script>
+</body>
+</html>

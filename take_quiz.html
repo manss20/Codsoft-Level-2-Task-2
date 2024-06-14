@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check out our hottest quizzes!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(90deg, rgb(156, 223, 166), cyan);
+            background-size: 200% 200%;
+            animation: gradientAnimation 4s infinite;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .main-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            height: 75%;
+            max-width: 900px;
+            max-height: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+        .main-card h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            font-family: 'Monaco', cursive;
+            color: #1b0b54;
+            animation: poppingText 1s ease-out;
+        }
+        @keyframes poppingText {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .cards-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 20px;
+        }
+        .card-button {
+            width: 60%;
+            max-width: 300px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 5s, transform 0.3s;
+        }
+        .card-button:hover {
+            transform: scale(1.05);
+        }
+        .future-pathways {
+            background-color: #FFB6C1; /* Light Pink */
+            font-family: 'Pacifico', cursive;
+        }
+        .future-pathways:hover {
+            background-color: #FFC0CB; /* Lighter Pink */
+        }
+        .style-through-time {
+            background-color: #FFD700; /* Light Golden */
+            font-family: 'Permanent Marker', cursive;
+        }
+        .style-through-time:hover {
+            background-color: #FFE135; /* Lighter Golden */
+        }
+        .taste-explorer {
+            background-color: #98FB98; /* Pale Green */
+            font-family: 'Roboto Mono', monospace;
+        }
+        .taste-explorer:hover {
+            background-color: #BDFCC9; /* Lighter Green */
+        }
+        .talent-treasure-hunt {
+            background-color: #ADD8E6; /* Light Blue */
+            font-family: 'Indie Flower', cursive;
+        }
+        .talent-treasure-hunt:hover {
+            background-color: #BFEFFF; /* Lighter Blue */
+        }
+        .melodic-match {
+            background-color: #FFB347; /* Pastel Orange */
+            font-family: 'Patrick Hand', cursive;
+        }
+        .melodic-match:hover {
+            background-color: #FFD1A3; /* Lighter Orange */
+        }
+        .card-button h2 {
+            font-size: 1.2em;
+            margin: 0;
+            color: #1b0b54;
+        }
+        .hidden-text {
+            display: none;
+        }
+        .card-button:hover .hidden-text {
+            display: block;
+        }
+        .card-button:hover .default-text {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <h1>Check out our hottest quizzes!</h1>
+        <div class="cards-container">
+            <div class="card-button future-pathways" onclick="window.open('future_pathways.html', '_blank')">
+                <h2 class="default-text">Future Pathways</h2>
+                <h2 class="hidden-text">Unveil your hidden career destiny!</h2>
+            </div>
+            <div class="card-button style-through-time" onclick="window.open('styles_through_time.html', '_blank')">
+                <h2 class="default-text">Style Through Time</h2>
+                <h2 class="hidden-text">Which fashion era defines you?</h2>
+            </div>
+            <div class="card-button taste-explorer" onclick="window.open('taste_explore.html', '_blank')">
+                <h2 class="default-text">Taste Explorer</h2>
+                <h2 class="hidden-text">Discover your global culinary world!</h2>
+            </div>
+            <div class="card-button talent-treasure-hunt" onclick="window.open('talent_treasure_hunt.html', '_blank')">
+                <h2 class="default-text">Talent Treasure Hunt</h2>
+                <h2 class="hidden-text">What skills are you hiding?</h2>
+            </div>
+            <div class="card-button melodic-match" onclick="window.open('melodic_match.html', '_blank')">
+                <h2 class="default-text">Melodic Match</h2>
+                <h2 class="hidden-text">Tune in to your musical soulmate..</h2>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Through Time</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Monaco&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('http://2.bp.blogspot.com/-R9KoorU2eto/VijrA_FFQqI/AAAAAAAAEEc/K9-IAHwGVSk/s1600/64d2a4624bd2cd0c375ad8ca45c38284.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .main-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            height: 75%;
+            max-width: 900px;
+            max-height: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .main-card h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-family: 'Monaco', cursive;
+            color: #1b0b54;
+            animation: poppingText 1s ease-out;
+        }
+        @keyframes poppingText {
+            0% { transform: scale(0); opacity:        0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .start-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+            font-family: 'Pacifico', cursive;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .start-button span {
+            margin-left: 10px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .start-button:hover span {
+            transform: translateX(5px);
+        }
+        .question-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .question {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .options li {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .options li:hover {
+            background-color: #e0e0e0;
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-family: 'Pacifico', cursive;
+            display: none;
+        }
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.5em;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .results {
+            display: none;
+            text-align: center;
+        }
+        .results h1 {
+            font-size: 4em;
+            color: #1b0b54;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .results p {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <h1>WELCOME to STYLE THROUGH TIME</h1>
+        <button class="start-button">
+            START QUIZ <span>&#9654;</span>
+        </button>
+        <div class="question-container">
+            <div class="timer">10</div>
+            <h2 class="question">Question 1 !</h2>
+            <ul class="options">
+                <li data-choice="A">A - Silk</li>
+                <li data-choice="B">B - Cotton</li>
+                <li data-choice="C">C - Polyester</li>
+                <li data-choice="D">D - Denim</li>
+            </ul>
+            <button class="submit-button">Submit</button>
+        </div>
+        <div class="results">
+            <h1>RESULTS!</h1>
+            <p class="result-text">YOUR STYLE IS: <span class="result-decade"></span></p>
+            <p class="result-description"></p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.start-button').addEventListener('click', startQuiz);
+        document.querySelector('.submit-button').addEventListener('click', submitAnswer);
+
+        let currentQuestionIndex = 0;
+        let userChoices = [];
+        let timerInterval;
+
+        const questions = [
+            {question: "What kind of fabric do you prefer wearing?", options: ["A - Silk", "B - Cotton", "C - Polyester", "D - Denim"]},
+            {question: "Which decade's fashion do you admire the most?", options: ["A - 1920s", "B - 1960s", "C - 1980s", "D - 2000s"]},
+            {question: "What is your go-to outfit for a casual day out?", options: ["A - Flapper dress", "B - Tie-dye shirt and bell-bottoms", "C - Neon tracksuit", "D - Low-rise jeans and crop top"]},
+            {question: "Which accessory do you never leave home without?", options: ["A - Pearl necklace", "B - Headband", "C - Oversized sunglasses", "D - Chunky belt"]},
+            {question: "What kind of prints do you prefer?", options: ["A - Art Deco", "B - Psychedelic", "C - Animal print", "D - Minimalist"]},
+            {question: "Which footwear do you feel most comfortable in?", options: ["A - T-strap heels", "B - Go-go boots", "C - High-top sneakers", "D - Platform sandals"]},
+            {question: "What kind of jacket do you prefer?", options: ["A - Fur stole", "B - Fringe jacket", "C - Denim jacket", "D - Leather jacket"]},
+            {question: "Which hairstyle do you like the most?", options: ["A - Finger waves", "B - Bouffant", "C - Mullet", "D - Layered bob"]},
+            {question: "What type of music do you enjoy the most?", options: ["A - Jazz", "B - Rock and roll", "C - Synth-pop", "D - Hip-hop"]},
+            {question: "What is your favorite type of event to attend?", options: ["A - Gala", "B - Music festival", "C - Dance party", "D - Fashion show"]}
+        ];
+
+        function startQuiz() {
+            document.querySelector('h1').style.display = 'none';
+            document.querySelector('.start-button').style.display = 'none';
+            document.querySelector('.question-container').style.display = 'flex';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const questionElement = document.querySelector('.question');
+                const optionsElement = document.querySelector('.options');
+                const timerElement = document.querySelector('.timer');
+                const submitButton = document.querySelector('.submit-button');
+
+                const currentQuestion = questions[currentQuestionIndex];
+                questionElement.textContent = currentQuestion.question;
+                optionsElement.innerHTML = '';
+
+                currentQuestion.options.forEach(option => {
+                    const li = document.createElement('li');
+                    li.textContent = option;
+                    li.dataset.choice = option.charAt(0);
+                    li.addEventListener('click', selectOption);
+                    optionsElement.appendChild(li);
+                });
+
+                questionElement.style.animation = 'none';
+                questionElement.offsetHeight; // Trigger reflow
+                questionElement.style.animation = 'poppingText 1s ease-out';
+                
+                timerElement.style.display = 'block';
+                submitButton.style.display = 'block';
+                startTimer();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function startTimer() {
+            let timeLeft = 10;
+            const timerElement = document.querySelector('.timer');
+            timerElement.textContent = timeLeft;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitAnswer();
+                }
+            }, 1000);
+        }
+
+        function selectOption(event) {
+            const selectedOption = event.target;
+            document.querySelectorAll('.options li').forEach(li => {
+                li.style.backgroundColor = '#f0f0f0';
+            });
+            selectedOption.style.backgroundColor = '#c8e6c9';
+            userChoices[currentQuestionIndex] = selectedOption.dataset.choice;
+        }
+
+        function submitAnswer() {
+            clearInterval(timerInterval);
+            currentQuestionIndex++;
+            showQuestion();
+        }
+
+        function endQuiz() {
+            const resultsElement = document.querySelector('.results');
+            const questionContainer = document.querySelector('.question-container');
+            const resultDecade = calculateResult();
+
+            questionContainer.style.display = 'none';
+            resultsElement.style.display = 'block';
+            document.querySelector('.result-decade').textContent = resultDecade.decade;
+            document.querySelector('.result-description').textContent = resultDecade.description;
+        }
+
+        function calculateResult() {
+            const answersCount = {A: 0, B: 0, C: 0, D: 0};
+            userChoices.forEach(choice => {
+                answersCount[choice]++;
+            });
+
+            const maxChoice = Object.keys(answersCount).reduce((a, b) => answersCount[a] > answersCount[b] ? a : b);
+
+            const results = {
+                A: {decade: '1920s', description: 'You love the glamour and elegance of the roaring twenties.'},
+                B: {decade: '1960s', description: 'You are a free spirit with a love for the vibrant sixties.'},
+                C: {decade: '1980s', description: 'You thrive on the bold and bright styles of the eighties.'},
+                D: {decade: '2000s', description: 'You are a trendsetter who embraces the eclectic style of the 2000s.'}
+            };
+
+            return results[maxChoice];
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melodic Match</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Monaco&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .main-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            height: 75%;
+            max-width: 900px;
+            max-height: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .main-card h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-family: 'Monaco', cursive;
+            color: #1b0b54;
+            animation: poppingText 1s ease-out;
+        }
+        @keyframes poppingText {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .start-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+            font-family: 'Pacifico', cursive;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .start-button span {
+            margin-left: 10px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .start-button:hover span {
+            transform: translateX(5px);
+        }
+        .question-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .question {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .options li {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .options li:hover {
+            background-color: #e0e0e0;
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-family: 'Pacifico', cursive;
+            display: none;
+        }
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.5em;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .results {
+            display: none;
+            text-align: center;
+        }
+        .results h1 {
+            font-size: 4em;
+            color: #1b0b54;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .results p {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <h1>WELCOME to MELODIC MATCH</h1>
+        <button class="start-button">
+            START QUIZ <span>&#9654;</span>
+        </button>
+        <div class="question-container">
+            <div class="timer">10</div>
+            <h2 class="question">Question 1!</h2>
+            <ul class="options">
+                <li data-choice="A">A - Classical</li>
+                <li data-choice="B">B - Jazz</li>
+                <li data-choice="C">C - Rock</li>
+                <li data-choice="D">D - Pop</li>
+            </ul>
+            <button class="submit-button">Submit</button>
+        </div>
+        <div class="results">
+            <h1>RESULTS!</h1>
+            <p class="result-text">YOUR MELODIC MATCH IS: <span class="result-talent"></span></p>
+            <p class="result-description"></p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.start-button').addEventListener('click', startQuiz);
+
+        let currentQuestionIndex = 0;
+        let userChoices = [];
+        let timerInterval;
+
+        const questions = [
+            {question: "What is your favorite genre of music?", options: ["A - Classical", "B - Jazz", "C - Rock", "D - Pop"]},
+            {question: "Which music instrument do you prefer?", options: ["A - Piano", "B - Saxophone", "C - Guitar", "D - Vocals"]},
+            {question: "What type of music do you listen to the most?", options: ["A - Symphony", "B - Smooth Jazz", "C - Hard Rock", "D - Top 40 Hits"]},
+            {question: "Who is your favorite musical artist?", options: ["A - Beethoven", "B - John Coltrane", "C - Led Zeppelin", "D - Taylor Swift"]},
+            {question: "What kind of music relaxes you the most?", options: ["A - Classical piano pieces", "B - Cool jazz melodies", "C - Heavy metal ballads", "D - Upbeat pop anthems"]},
+            {question: "Which music festival would you most like to attend?", options: ["A - Vienna Philharmonic Orchestra performance", "B - New Orleans Jazz & Heritage Festival", "C - Download Festival", "D - Coachella"]},
+            {question: "What mood does music most often put you in?", options: ["A - Reflective and serene", "B - Cool and laid-back", "C - Energetic and pumped up", "D - Excited and vibrant"]},
+            {question: "If you were a musician, what role would you prefer in a band?", options: ["A - Composer", "B - Improviser", "C - Lead guitarist", "D - Lead vocalist"]},
+            {question: "Which music-related movie would you watch multiple times?", options: ["A - Amadeus", "B - La La Land", "C - Bohemian Rhapsody", "D - A Star is Born"]},
+            {question: "What do you like most about music?", options: ["A - Its ability to transport me to different emotional states", "B - Its improvisational nature", "C - Its raw power and energy", "D - Its ability to make me dance and sing along"]}
+        ];
+
+        function startQuiz() {
+            document.querySelector('h1').style.display = 'none';
+            document.querySelector('.start-button').style.display = 'none';
+            document.querySelector('.question-container').style.display = 'flex';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const questionElement = document.querySelector('.question');
+                const optionsElement = document.querySelector('.options');
+                const timerElement = document.querySelector('.timer');
+                const submitButton = document.querySelector('.submit-button');
+
+                const currentQuestion = questions[currentQuestionIndex];
+                questionElement.textContent = currentQuestion.question;
+                optionsElement.innerHTML = '';
+
+                currentQuestion.options.forEach(option => {
+                    const li = document.createElement('li');
+                    li.textContent = option;
+                    li.dataset.choice = option.charAt(0);
+                    li.addEventListener('click', selectOption);
+                    optionsElement.appendChild(li);
+                });
+
+                questionElement.style.animation = 'none';
+                questionElement.offsetHeight; // Trigger reflow
+                questionElement.style.animation = 'poppingText 1s ease-out';
+                
+                timerElement.style.display = 'block';
+                submitButton.style.display = 'block';
+                startTimer();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function selectOption(event) {
+            const selectedChoice = event.target.dataset.choice;
+            userChoices.push(selectedChoice);
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => option.removeEventListener('click', selectOption));
+        }
+
+        function submitAnswer() {
+            clearInterval(timerInterval);
+            const options = document.querySelectorAll('.options li');
+            options.forEach(option => option.removeEventListener('click', selectOption));
+            document.querySelector('.submit-button').style.display = 'none';
+
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                setTimeout(showQuestion, 1000); // Delay before showing next question
+            } else {
+                showResult();
+            }
+        }
+
+        function startTimer() {
+            let timeLeft = 10;
+            const timerElement = document.querySelector('.timer');
+            timerInterval = setInterval(() => {
+                if (timeLeft > 0) {
+                    timerElement.textContent = timeLeft--;
+                } else {
+                    clearInterval(timerInterval);
+                    submitAnswer();
+                }
+            }, 1000);
+        }
+
+        function showResult() {
+            const resultContainer = document.querySelector('.results');
+            const resultTextElement = document.querySelector('.result-talent');
+            const resultDescriptionElement = document.querySelector('.result-description');
+            resultTextElement.textContent = calculateResult();
+            resultDescriptionElement.textContent = getResultDescription();
+            resultContainer.style.display = 'block';
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function calculateResult() {
+            const resultCounts = { A: 0, B: 0, C: 0, D: 0 };
+
+            userChoices.forEach(choice => {
+                if (resultCounts.hasOwnProperty(choice)) {
+                    resultCounts[choice]++;
+                }
+            });
+
+            const maxCount = Math.max(...Object.values(resultCounts));
+            const result = Object.keys(resultCounts).find(key => resultCounts[key] === maxCount);
+
+            return result;
+        }
+
+        function getResultDescription() {
+            const result = calculateResult();
+            switch (result) {
+                case 'A':
+                    return "You have a strong affinity for classical music. You appreciate the depth and complexity of classical compositions.";
+                case 'B':
+                    return "You are drawn to the improvisational and cool sounds of jazz music. You enjoy the freedom and creativity it offers.";
+                case 'C':
+                    return "Your heart beats to the rhythm of rock music. You thrive on its energy and raw power.";
+                case 'D':
+                    return "Pop music is your jam! You love its catchy tunes and ability to lift your spirits.";
+                default:
+                    return "";
+            }
+        }
+
+        document.querySelector('.submit-button').addEventListener('click', submitAnswer);
+    </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quizzeria</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        .bg-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+        .main-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(243, 180, 198, 0.8);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 75%;
+            height: 75%;
+            max-width: 900px;
+            max-height: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .main-card h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-family: 'Monaco', cursive;
+            background: linear-gradient(to right, #0000ff, #8a2be2, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 3px 3px #9931d1, -1px -1px #496db5;
+        }
+        .main-card h1 .sparkle {
+            font-family: 'Monaco', cursive;
+            color: #fff44f;
+        }
+        .small-cards-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+        .small-card {
+            width: 60%;
+            display: flex;
+            justify-content: center;
+        }
+        .button {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            width: 100%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+        }
+        .button h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-family: 'Monaco', sans-serif;
+        }
+        .create-quiz {
+            color: rgb(70, 29, 95);
+        }
+        .take-quiz {
+            color: rgb(76, 54, 136);
+        }
+        .button:hover {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+        .login-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #8a2be2;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-family: 'Monaco', sans-serif;
+        }
+    </style>
+    <script>
+        function openLoginPage() {
+            window.open('login.html', '_blank');
+        }
+    </script>
+</head>
+<body>
+    <img src="C:\Users\manas\Downloads\Untitled.png" alt="Background Image" class="bg-image"> <!-- Replace with your background image path -->
+    <div class="main-card">
+        <h1>WELCOME TO <span class="sparkle">✨QUIZIVERSE✨</span>!</h1>
+        <div class="small-cards-container">
+            <div class="small-card">
+                <div class="button create-quiz" onclick="window.open('create_quiz.html', '_blank')">
+                    <h2>CREATE YOUR OWN QUIZ! 📝</h2>
+                </div>
+            </div>
+            <div class="small-card">
+                <div class="button take-quiz" onclick="window.open('take_quiz.html', '_blank')">
+                    <h2>TAKE A QUIZ! 🎯</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="login-button" onclick="openLoginPage()">Login/Signup</button>
+</body>
+</html>

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Pathways</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Monaco&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://thumbs.dreamstime.com/z/career-job-success-concept-blue-background-61621327.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        .main-card {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            height: 75%;
+            max-width: 900px;
+            max-height: 600px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .main-card h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-family: 'Monaco', cursive;
+            color: #1b0b54;
+            animation: poppingText 1s ease-out;
+        }
+        @keyframes poppingText {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .start-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+            font-family: 'Pacifico', cursive;
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            animation: fadeIn 2s ease-in-out 1s forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .start-button span {
+            margin-left: 10px;
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+        .start-button:hover span {
+            transform: translateX(5px);
+        }
+        .question-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+        }
+        .question {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .options {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .options li {
+            background-color: #f0f0f0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .options li:hover {
+            background-color: #e0e0e0;
+        }
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-family: 'Pacifico', cursive;
+            display: none;
+        }
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 1.5em;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .results {
+            display: none;
+            text-align: center;
+        }
+        .results h1 {
+            font-size: 4em;
+            color: #1b0b54;
+            margin-bottom: 20px;
+            animation: poppingText 1s ease-out;
+        }
+        .results p {
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <h1>WELCOME to FUTURE PATHWAYS</h1>
+        <button class="start-button">
+            START QUIZ <span>&#9654;</span>
+        </button>
+        <div class="question-container">
+            <div class="timer">10</div>
+            <h2 class="question">Question 1 !</h2>
+            <ul class="options">
+                <li data-choice="A">A - Organizing a community event</li>
+                <li data-choice="B">B - Assisting in a science fair</li>
+                <li data-choice="C">C - Writing for the school newspaper</li>
+                <li data-choice="D">D - Painting a mural</li>
+            </ul>
+            <button class="submit-button">Submit</button>
+        </div>
+        <div class="results">
+            <h1>RESULTS!</h1>
+            <p class="result-text">YOU ARE A: <span class="result-role"></span></p>
+            <p class="result-description"></p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelector('.start-button').addEventListener('click', startQuiz);
+
+        let currentQuestionIndex = 0;
+        let userChoices = [];
+        let timerInterval;
+
+        const questions = [
+            {question: "Which of these activities would you most likely volunteer for?", options: ["A - Organizing a community event", "B - Assisting in a science fair", "C - Writing for the school newspaper", "D - Painting a mural"]},
+            {question: "What type of books do you enjoy reading the most?", options: ["A - Mystery and crime novels", "B - Science fiction and non-fiction", "C - Poetry and classic literature", "D - Art and design books"]},
+            {question: "How do you usually spend your weekends?", options: ["A - Attending workshops or courses", "B - Exploring museums or science centers", "C - Participating in book clubs or writing groups", "D - Visiting art galleries or craft fairs"]},
+            {question: "Which role would you prefer in a group project?", options: ["A - Project manager", "B - Researcher", "C - Editor or writer", "D - Designer"]},
+            {question: "What motivates you the most in your daily life?", options: ["A - Achieving goals and targets", "B - Discovering new information and insights", "C - Expressing thoughts and emotions", "D - Creating something beautiful or innovative"]},
+            {question: "Which of the following best describes your problem-solving approach?", options: ["A - Logical and methodical", "B - Experimental and hands-on", "C - Reflective and analytical", "D - Intuitive and creative"]},
+            {question: "What kind of impact do you want to have on the world?", options: ["A - Innovate and improve technologies", "B - Make groundbreaking discoveries", "C - Inspire and move people through words", "D - Beautify and enrich environments with art"]},
+            {question: "Which kind of school project excites you the most?", options: ["A - Building a model or prototype", "B - Conducting a science experiment", "C - Writing a novel or essay", "D - Creating an art installation"]},
+            {question: "If you could apprentice under a famous figure, who would you choose?", options: ["A - Steve Jobs (Technology)", "B - Marie Curie (Science)", "C - J.K. Rowling (Literature)", "D - Vincent van Gogh (Art)"]},
+            {question: "What kind of workshops or classes would you sign up for?", options: ["A - Coding and robotics", "B - Advanced chemistry", "C - Creative writing", "D - Digital illustration"]}
+        ];
+
+        function startQuiz() {
+            document.querySelector('h1').style.display = 'none';
+            document.querySelector('.start-button').style.display = 'none';
+            document.querySelector('.question-container').style.display = 'flex';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex < questions.length) {
+                const questionElement = document.querySelector('.question');
+                const optionsElement = document.querySelector('.options');
+                const timerElement = document.querySelector('.timer');
+                const submitButton = document.querySelector('.submit-button');
+
+                const currentQuestion = questions[currentQuestionIndex];
+                questionElement.textContent = currentQuestion.question;
+                optionsElement.innerHTML = '';
+
+                currentQuestion.options.forEach(option => {
+                    const li = document.createElement('li');
+                    li.textContent = option;
+                    li.dataset.choice = option.charAt(0);
+                    li.addEventListener('click', selectOption);
+                    optionsElement.appendChild(li);
+                });
+
+                questionElement.style.animation = 'none';
+                questionElement.offsetHeight; // Trigger reflow
+                questionElement.style.animation = 'poppingText 1s ease-out';
+                
+                timerElement.style.display = 'block';
+                submitButton.style.display = 'block';
+                startTimer();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function startTimer() {
+            let timeLeft = 10;
+            const timerElement = document.querySelector('.timer');
+            timerElement.textContent = timeLeft;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitAnswer();
+                }
+            }, 1000);
+        }
+
+        function selectOption(event) {
+            document.querySelectorAll('.options li').forEach(li => {
+                li.style.backgroundColor = '#f0f0f0';
+            });
+            event.target.style.backgroundColor = '#d0d0d0';
+        }
+
+        function submitAnswer() {
+            clearInterval(timerInterval);
+            const selectedOption = document.querySelector('.options li[style*="background-color: rgb(208, 208, 208)"]');
+            if (selectedOption) {
+                userChoices.push(selectedOption.dataset.choice);
+            } else {
+                userChoices.push(null);
+            }
+            currentQuestionIndex++;
+            document.querySelector('.timer').style.display = 'none';
+            document.querySelector('.submit-button').style.display = 'none';
+            showQuestion();
+        }
+
+        document.querySelector('.submit-button').addEventListener('click', submitAnswer);
+
+        function endQuiz() {
+            document.querySelector('.question-container').style.display = 'none';
+            document.querySelector('.results').style.display = 'block';
+
+            const resultCounts = userChoices.reduce((acc, choice) => {
+                if (choice) acc[choice] = (acc[choice] || 0) + 1;
+                return acc;
+            }, {});
+
+            let maxCount = 0;
+            let maxChoice = '';
+
+            for (const choice in resultCounts) {
+                if (resultCounts[choice] > maxCount) {
+                    maxCount = resultCounts[choice];
+                    maxChoice = choice;
+                }
+            }
+
+            const resultRole = {
+                'A': 'Engineer',
+                'B': 'Scientist',
+                'C': 'Writer',
+                'D': 'Artist'
+            };
+
+            const resultDescription = {
+                'A': 'You have a logical mind and enjoy solving problems. Your organizational skills and goal-oriented mindset make you perfect for roles in engineering and technology.',
+                'B': 'You are curious and love exploring the unknown. Your fascination with discovery and hands-on approach suits you for a career in science and research.',
+                'C': 'You have a talent for storytelling and expressing ideas. Your reflective nature and passion for words position you well for careers in writing, journalism, or literature.',
+                'D': 'You have a creative soul and enjoy expressing yourself through art. Your intuitive and innovative approach makes you ideal for careers in art, design, and other creative fields.'
+            };
+
+            document.querySelector('.result-role').textContent = resultRole[maxChoice];
+            document.querySelector('.result-description').textContent = resultDescription[maxChoice];
+        }
+    </script>
+</body>
+</html>

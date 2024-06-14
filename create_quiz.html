@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your Own Quiz!</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #280048, #7942ff);
+        }
+
+        .main-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 75%;
+            max-width: 600px;
+            height: 80%;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.19);
+        }
+
+        .main-card h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #8a2be2;
+        }
+
+        .main-card p {
+            font-size: 1.2em;
+            text-align: left;
+            margin-left: 30px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .question-container {
+            text-align: left;
+            margin-bottom: 20px;
+            border-top: 2px solid #ffb6c1;
+            padding-top: 20px;
+        }
+
+        .question-container input[type="text"] {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .question-container input[type="checkbox"] {
+            margin-left: 20px;
+        }
+
+        .question-container label {
+            margin-left: 5px;
+        }
+
+        .dropdown-container {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .dropdown-container select {
+            width: calc(100% - 40px);
+            padding: 10px;
+            margin: 10px 20px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            color: #555;
+        }
+
+        .instructions ul {
+            text-align: left;
+            margin-left: 30px;
+            color: #333;
+        }
+
+        .instructions ul li {
+            margin-bottom: 10px;
+        }
+
+        .submit-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+
+        .new-button {
+            background-color: #ff0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .error-message, .success-message {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .success-message {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <div class="part-one">
+            <h2>Create Your Own Quiz!</h2>
+            <div class="instructions">
+                <p>Instructions:</p>
+                <ul>
+                    <li>Make the questions in understandable English.</li>
+                    <li>Have no more than 10 Questions.</li>
+                    <li>Do not have more than two options as answers to one question.</li>
+                    <li>Do not use abusive or offensive terms.</li>
+                    <li>Login to see your previous quizzes.</li>
+                </ul>
+            </div>
+            <div class="dropdown-container">
+                <label for="question-number">Number of questions</label>
+                <select id="question-number" onchange="generateQuestions()">
+                    <option value="" disabled selected>Choose the number of questions</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </div>
+        </div>
+        <form id="quiz-form">
+            <!-- Question templates will be generated here -->
+        </form>
+        <button class="submit-button" onclick="submitQuiz()">Submit</button>
+        <button class="new-button" id="new-button" onclick="resetQuiz()">+ New</button>
+        <div class="error-message" id="error-message"></div>
+        <div class="success-message" id="success-message"></div>
+    </div>
+
+    <script>
+        function generateQuestions() {
+            const form = document.getElementById('quiz-form');
+            form.innerHTML = '';  // Clear existing questions
+            const numQuestions = document.getElementById('question-number').value;
+
+            for (let i = 0; i < numQuestions; i++) {
+                const questionContainer = document.createElement('div');
+                questionContainer.className = 'question-container';
+
+                const questionInput = document.createElement('input');
+                questionInput.type = 'text';
+                questionInput.placeholder = 'Question';
+                questionInput.onfocus = function() { this.placeholder = ''; };
+                questionInput.onblur = function() { this.placeholder = 'Question'; };
+
+                questionContainer.appendChild(questionInput);
+
+                const options = ['Option A', 'Option B', 'Option C', 'Option D'];
+                options.forEach(option => {
+                    const optionContainer = document.createElement('div');
+                    const optionInput = document.createElement('input');
+                    optionInput.type = 'checkbox';
+
+                    const optionLabel = document.createElement('input');
+                    optionLabel.type = 'text';
+                    optionLabel.placeholder = option;
+                    optionLabel.onfocus = function() { this.placeholder = ''; };
+                    optionLabel.onblur = function() { this.placeholder = option; };
+
+                    optionContainer.appendChild(optionInput);
+                    optionContainer.appendChild(optionLabel);
+                    questionContainer.appendChild(optionContainer);
+                });
+
+                form.appendChild(questionContainer);
+            }
+        }
+
+        function submitQuiz() {
+            const form = document.getElementById('quiz-form');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            const newButton = document.getElementById('new-button');
+            let isComplete = true;
+            
+            // Clear any previous messages
+            errorMessage.textContent = '';
+            successMessage.textContent = '';
+
+            // Check if all fields are filled
+            const inputs = form.querySelectorAll('input[type="text"]');
+            inputs.forEach(input => {
+                if (input.value.trim() === '') {
+                    isComplete = false;
+                }
+            });
+
+            if (isComplete) {
+                // Finalize the quiz, disable further editing
+                form.querySelectorAll('input').forEach(input => {
+                    input.disabled = true;
+                });
+                form.querySelectorAll('select').forEach(select => {
+                    select.disabled = true;
+                });
+                successMessage.textContent = 'Quiz submitted successfully!';
+                newButton.style.display = 'block';
+            } else {
+                // Display error message
+                errorMessage.textContent = 'ERROR! Your Quiz is incomplete';
+            }
+        }
+
+        function resetQuiz() {
+            const form = document.getElementById('quiz-form');
+            const errorMessage = document.getElementById('error-message');
+            const successMessage = document.getElementById('success-message');
+            const newButton = document.getElementById('new-button');
+            const select = document.getElementById('question-number');
+
+            // Reset the form
+            form.innerHTML = '';
+            select.value = '';
+            errorMessage.textContent = '';
+            successMessage.textContent = '';
+            newButton.style.display = 'none';
+        }
+    </script>
+</body>
+</html>

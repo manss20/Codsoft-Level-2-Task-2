@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login/Signup - Quizzeria</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, rgb(209, 153, 194), rgb(44, 2, 102));
+            background-size: 200% 200%;
+            animation: gradientAnimation 4s ease infinite;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .main-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 75%;
+            max-width: 400px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .main-card h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-family: 'Pacifico', cursive;
+        }
+        .main-card input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .main-card button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #8a2be2;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .main-card a {
+            display: block;
+            margin: 10px 0;
+            color: #8a2be2;
+            text-decoration: none;
+        }
+        .main-card a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-card">
+        <h2>Login</h2>
+        <input type="text" placeholder="User ID">
+        <input type="password" placeholder="Password">
+        <button>Login</button>
+        <a href="#">Forgot password?</a>
+        <a href="#">New here? Sign up!</a>
+    </div>
+</body>
+</html>
